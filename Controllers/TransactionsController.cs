@@ -9,7 +9,7 @@ namespace FinanceTrackerAPI.Controllers;
 [ApiController]
 [Route("api/[controller]")]
 [Authorize]
-[HttpGet("summery")]
+
 public class TransactionsController : ControllerBase
 {
     private readonly ITransactionService _service;
@@ -69,6 +69,8 @@ public class TransactionsController : ControllerBase
         if (!deleted) return NotFound(new { message = "Transaction not found" });
         return NoContent();
     }
+    // Get api/transactions/summery
+    [HttpGet("summery")]
     public async Task<IActionResult> GetSummary()
     {
         var transactions = await _service.GetAllAsync(GetUserId());
