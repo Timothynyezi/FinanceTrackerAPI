@@ -9,6 +9,7 @@ namespace FinanceTrackerAPI.Controllers;
 [ApiController]
 [Route("api/[controller]")]
 [Authorize]
+[HttpGet("summery")]
 public class TransactionsController : ControllerBase
 {
     private readonly ITransactionService _service;
