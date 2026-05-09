@@ -28,15 +28,15 @@ cd FinanceTrackerAPI
 # Install EF Core tools (first time only)
 dotnet tool install --global dotnet-ef
 
-# Run migrations (creates the SQLite database)
-dotnet ef migrations add InitialCreate
+# Apply migrations to create the SQLite database
+# Note: if migrations already exist, skip the 'add' step and just run 'database update'
 dotnet ef database update
 
-# Run the API
-dotnet run
+# Run the API in Development mode (required for Swagger)
+ASPNETCORE_ENVIRONMENT=Development dotnet run
 ```
 
-The API will be available at `http://localhost:5000`.  
+The API will be available at `http://localhost:5000`.
 Swagger UI: `http://localhost:5000/swagger`
 
 ### Configuration
@@ -50,6 +50,15 @@ In `appsettings.json`, replace the JWT key with a secure random string (32+ char
   "Audience": "FinanceTrackerClient"
 }
 ```
+
+### Testing with Swagger
+
+1. Open `http://localhost:5000/swagger`
+2. Register a user via `POST /api/auth/register`
+3. Login via `POST /api/auth/login` and copy the token from the response
+4. Click the **Authorize** button at the top right of the Swagger page
+5. Enter `Bearer {your_token}` and click Authorize
+6. All protected endpoints are now accessible
 
 ## API Endpoints
 
@@ -85,28 +94,49 @@ POST /api/auth/register
 }
 ```
 
+### Login
+```json
+POST /api/auth/login
+{
+  "username": "thami",
+  "password": "securepassword123"
+}
+```
+
 ### Create Transaction
 ```json
 POST /api/transactions
 Authorization: Bearer {your_token}
+
 {
   "description": "Monthly salary",
   "amount": 15000.00,
-  "date": "2026-04-01T00:00:00",
+  "date": "2026-05-01T00:00:00",
   "type": 0,
   "categoryId": 1
 }
 ```
 *Note: `type` — 0 = Income, 1 = Expense*
 
+### Update Transaction (partial update supported)
+```json
+PUT /api/transactions/1
+Authorization: Bearer {your_token}
+
+{
+  "description": "Updated description",
+  "amount": 18000.00
+}
+```
+
 ## Architecture
 
 ```
 Controllers/     → Handle HTTP requests and responses
-Services/        → Business logic layer
+Services/        → Business logic and DTO mapping
 Repositories/    → Database access layer
 Models/          → Entity classes (User, Transaction, Category)
-DTOs/            → Request and response data shapes
+DTOs/            → Request and response data shapes with validation
 Data/            → EF Core DbContext and migrations
 Middleware/      → Global error handling
 ```
@@ -117,5 +147,5 @@ Salary, Food & Groceries, Transport, Utilities, Entertainment, Healthcare, Other
 
 ## Author
 
-**Thamsanqa Timothy Nyezi**  
+**Thamsanqa Timothy Nyezi**
 [github.com/Timothynyezi](https://github.com/Timothynyezi) | [linkedin.com/in/tt-nyezi](https://linkedin.com/in/tt-nyezi)
