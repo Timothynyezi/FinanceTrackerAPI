@@ -69,4 +69,25 @@ public class TransactionsController : ControllerBase
         if (!deleted) return NotFound(new { message = "Transaction not found" });
         return NoContent();
     }
+    public async Task<IActionResult> GetSummary()
+    {
+        var transactions = await _service.GetAllAsync(GetUserId());
+
+        var totalIncome = transactions
+            .Where(t => t.Type == "Income")
+            .Sum(t => t.Amount);
+
+        var totalExpenses = transactions
+            .Where(t => t.Type == "Expense")
+            .Sum(t => t.Amount);
+        
+        var netBalance = totalIncome - totalExpenses;
+
+        return Ok(new
+        {
+            totalIncome,
+            totalExpenses,
+            netBalance
+        });
+    }
 }
