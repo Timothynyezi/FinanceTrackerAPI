@@ -69,8 +69,8 @@ public class TransactionsController : ControllerBase
         if (!deleted) return NotFound(new { message = "Transaction not found" });
         return NoContent();
     }
-    // Get api/transactions/summery
-    [HttpGet("summery")]
+    // Get api/transactions/summary
+    [HttpGet("summary")]
     public async Task<IActionResult> GetSummary()
     {
         var transactions = await _service.GetAllAsync(GetUserId());
