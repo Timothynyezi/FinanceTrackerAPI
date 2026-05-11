@@ -25,6 +25,12 @@ public class TransactionService : ITransactionService
     public async Task<IEnumerable<TransactionResponseDto>> GetAllAsync(int userId)
     {
         var transactions = await _repo.GetAllByUserAsync(userId);
+
+        if (!string.IsNullOrEmpty(type))
+        {
+            transactions = transactions
+                .Where(t => t.Type.Equals(type, StringComparison.OrdinalIgnoreCase))
+        }
         return transactions.Select(MapToDto);
     }
 
