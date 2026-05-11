@@ -22,14 +22,14 @@ public class TransactionService : ITransactionService
         _repo = repo;
     }
 
-    public async Task<IEnumerable<TransactionResponseDto>> GetAllAsync(int userId)
+    public async Task<IEnumerable<TransactionResponseDto>> GetAllAsync(int userId string? type = null)
     {
         var transactions = await _repo.GetAllByUserAsync(userId);
 
         if (!string.IsNullOrEmpty(type))
         {
             transactions = transactions
-                .Where(t => t.Type.Equals(type, StringComparison.OrdinalIgnoreCase))
+                .Where(t => t.Type.Equals(type, StringComparison.OrdinalIgnoreCase));
         }
         return transactions.Select(MapToDto);
     }
