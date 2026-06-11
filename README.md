@@ -41,16 +41,9 @@ Swagger UI: `http://localhost:5000/swagger`
 
 ### Configuration
 
-In `appsettings.json`, replace the JWT key with a secure random string (32+ characters):
-
-```json
-"Jwt": {
-  "Key": "YOUR_STRONG_SECRET_KEY_HERE_MIN_32_CHARS",
-  "Issuer": "FinanceTrackerAPI",
-  "Audience": "FinanceTrackerClient"
-}
-```
-
+This project uses .NET User Secrets to keep the JWT signing key out of source control. After cloning, run dotnet user-secrets init followed by dotnet user-secrets set "Jwt:Key" "your-secure-random-key-min-32-chars". Generate a strong key with openssl rand -base64 32. appsettings.json intentionally ships with an empty Jwt:Key — User Secrets will override it automatically when running in Development mode. In production, set Jwt:Key as an environment variable instead, e.g. export Jwt__Key="your-production-key".
+Security Note
+An earlier commit contained a hardcoded JWT secret. This key has been rotated, removed from appsettings.json, and scrubbed from git history. The project now uses .NET User Secrets for local development and environment variables for production.
 ### Testing with Swagger
 
 1. Open `http://localhost:5000/swagger`
